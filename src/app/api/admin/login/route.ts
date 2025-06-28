@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/src/lib/mongodb'
 import Admin from '@/src/models/Admin'
+import jwt from 'jsonwebtoken'
 
 export async function POST(request: NextRequest) {
     try {
@@ -48,8 +49,16 @@ export async function POST(request: NextRequest) {
         admin.lastLogin = new Date()
         await admin.save()
 
-        // Gerar token simples (em produção, use JWT)
-        const token = `admin-token-${admin._id}-${Date.now()}`
+        // Gerar JWT token
+        const token = jwt.sign(
+            {
+                adminId: admin._id,
+                email: admin.email,
+                role: admin.role
+            },
+            process.env.JWT_SECRET || 'fallback-secret',
+            { expiresIn: '7d' }
+        )
 
         const response = NextResponse.json({
             success: true,

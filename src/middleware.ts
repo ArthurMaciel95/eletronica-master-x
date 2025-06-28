@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import jwt from 'jsonwebtoken'
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
@@ -20,15 +21,18 @@ export function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/admin/login', request.url))
         }
 
-        // Validar formato do token dinâmico
+        // Validar token JWT
         try {
-            // Verificar se o token tem o formato correto: admin-token-{id}-{timestamp}
-            if (token.startsWith('admin-token-') && token.includes('-')) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret')
+
+            // Verificar se o token tem as propriedades necessárias
+            if (decoded && typeof decoded === 'object' && 'adminId' in decoded) {
                 return NextResponse.next()
             } else {
                 return NextResponse.redirect(new URL('/admin/login', request.url))
             }
         } catch (error) {
+            // Token inválido ou expirado
             return NextResponse.redirect(new URL('/admin/login', request.url))
         }
     }

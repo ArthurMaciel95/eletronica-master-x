@@ -44,16 +44,7 @@ export async function GET() {
             })
         }
 
-        // Criar admin padrão se não existir
-        if (adminsCount === 0) {
-            console.log('Creating default admin...')
-            await Admin.create({
-                name: 'Administrador',
-                email: 'admin@antonio.com',
-                password: 'admin123',
-                role: 'super_admin'
-            })
-        }
+
 
         // Criar produtos de exemplo se não existirem
         if (productsCount === 0) {
@@ -139,10 +130,7 @@ export async function GET() {
                 adminsCount: await Admin.countDocuments(),
                 connection: 'OK',
                 environment: process.env.NODE_ENV || 'development',
-                defaultAdmin: {
-                    email: 'admin@antonio.com',
-                    password: 'admin123'
-                }
+
             }
         })
 
