@@ -17,19 +17,49 @@ export default function AdminDashboard() {
     totalBrands: 0
   })
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const router = useRouter()
 
   useEffect(() => {
-    // Simular carregamento de estatísticas
-    setTimeout(() => {
-      setStats({
-        totalProducts: 6,
-        totalServices: 3,
-        totalBrands: 12
-      })
-      setLoading(false)
-    }, 1000)
+    fetchDashboardStats()
   }, [])
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true)
+      setError('')
+
+      // Buscar estatísticas de produtos
+      const productsResponse = await fetch('/api/products')
+      const products = productsResponse.ok ? await productsResponse.json() : []
+      
+      // Buscar estatísticas de serviços
+      const servicesResponse = await fetch('/api/services')
+      const services = servicesResponse.ok ? await servicesResponse.json() : []
+      
+      // Buscar estatísticas de marcas (brands)
+      const brandsResponse = await fetch('/api/brands')
+      const brands = brandsResponse.ok ? await brandsResponse.json() : []
+
+      setStats({
+        totalProducts: products.length,
+        totalServices: services.length,
+        totalBrands: brands.length
+      })
+    } catch (err) {
+      console.error('Erro ao carregar estatísticas:', err)
+      setError('Erro ao carregar estatísticas do dashboard')
+      
+      // Fallback para dados mockados em caso de erro
+      setStats({
+        totalProducts: 0,
+        totalServices: 0,
+        totalBrands: 0
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken')
@@ -109,6 +139,12 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-6">
+            {error}
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -123,7 +159,11 @@ export default function AdminDashboard() {
                   <dl>
                     <dt className="text-sm font-medium text-gray-500 truncate">Total de Produtos</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {loading ? '...' : stats.totalProducts}
+                      {loading ? (
+                        <div className="animate-pulse bg-gray-200 h-6 w-8 rounded"></div>
+                      ) : (
+                        stats.totalProducts
+                      )}
                     </dd>
                   </dl>
                 </div>
@@ -144,7 +184,11 @@ export default function AdminDashboard() {
                   <dl>
                     <dt className="text-sm font-medium text-gray-500 truncate">Serviços Ativos</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {loading ? '...' : stats.totalServices}
+                      {loading ? (
+                        <div className="animate-pulse bg-gray-200 h-6 w-8 rounded"></div>
+                      ) : (
+                        stats.totalServices
+                      )}
                     </dd>
                   </dl>
                 </div>
@@ -164,7 +208,11 @@ export default function AdminDashboard() {
                   <dl>
                     <dt className="text-sm font-medium text-gray-500 truncate">Marcas Cadastradas</dt>
                     <dd className="text-lg font-medium text-gray-900">
-                      {loading ? '...' : stats.totalBrands}
+                      {loading ? (
+                        <div className="animate-pulse bg-gray-200 h-6 w-8 rounded"></div>
+                      ) : (
+                        stats.totalBrands
+                      )}
                     </dd>
                   </dl>
                 </div>
