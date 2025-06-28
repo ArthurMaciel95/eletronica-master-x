@@ -18,6 +18,7 @@ export default function AdminLogin() {
     setError('')
 
     try {
+      console.log('Tentando fazer login...')
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
@@ -26,15 +27,21 @@ export default function AdminLogin() {
         body: JSON.stringify(credentials),
       })
 
+      console.log('Resposta do login:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('Login bem-sucedido:', data)
         localStorage.setItem('adminToken', data.token)
+        console.log('Token salvo no localStorage, redirecionando...')
         router.push('/admin/dashboard')
       } else {
         const errorData = await response.json()
+        console.log('Erro no login:', errorData)
         setError(errorData.message || 'Credenciais inválidas')
       }
     } catch (err) {
+      console.error('Erro ao fazer login:', err)
       setError('Erro ao fazer login. Tente novamente.')
     } finally {
       setLoading(false)

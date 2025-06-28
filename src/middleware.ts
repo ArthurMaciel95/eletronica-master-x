@@ -20,11 +20,10 @@ export function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/admin/login', request.url))
         }
 
-        // Aqui você pode adicionar validação adicional do token
-        // Por exemplo, verificar se o token é válido no servidor
+        // Validar formato do token dinâmico
         try {
-            // Simular validação do token (em produção, você validaria com JWT)
-            if (token === 'valid-admin-token') {
+            // Verificar se o token tem o formato correto: admin-token-{id}-{timestamp}
+            if (token.startsWith('admin-token-') && token.includes('-')) {
                 return NextResponse.next()
             } else {
                 return NextResponse.redirect(new URL('/admin/login', request.url))
