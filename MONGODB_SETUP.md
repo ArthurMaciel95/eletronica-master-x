@@ -22,6 +22,7 @@ ADMIN_PASSWORD=admin123
 O sistema criará automaticamente as seguintes coleções:
 
 ### Products
+
 - `name`: Nome do produto
 - `description`: Descrição do produto
 - `price`: Preço (número)
@@ -33,6 +34,7 @@ O sistema criará automaticamente as seguintes coleções:
 - `updatedAt`: Data de atualização
 
 ### Brands
+
 - `name`: Nome da marca
 - `logo`: URL do logo
 - `active`: Se está ativa (boolean)
@@ -41,6 +43,7 @@ O sistema criará automaticamente as seguintes coleções:
 - `updatedAt`: Data de atualização
 
 ### Settings
+
 - `siteName`: Nome do site
 - `siteDescription`: Descrição do site
 - `contactEmail`: Email de contato
@@ -55,6 +58,7 @@ O sistema criará automaticamente as seguintes coleções:
 ## 3. APIs Disponíveis
 
 ### Produtos
+
 - `GET /api/products` - Listar todos os produtos
 - `POST /api/products` - Criar novo produto
 - `GET /api/products/[id]` - Buscar produto específico
@@ -62,10 +66,12 @@ O sistema criará automaticamente as seguintes coleções:
 - `DELETE /api/products/[id]` - Excluir produto
 
 ### Marcas
+
 - `GET /api/brands` - Listar marcas ativas
 - `POST /api/brands` - Criar nova marca
 
 ### Configurações
+
 - `GET /api/settings` - Buscar configurações do site
 - `PUT /api/settings` - Atualizar configurações
 
@@ -88,5 +94,6 @@ O sistema inclui validações automáticas:
 ## 6. Índices
 
 O MongoDB criará automaticamente:
+
 - Índice único para configurações (garante apenas uma configuração)
-- Índices de timestamp para ordenação 
+- Índices de timestamp para ordenação
