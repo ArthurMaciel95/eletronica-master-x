@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 
-const MONGODB_URI = process.env.MONGODB_URI!
+const MONGODB_URI = process.env.MONGODB_URI
 
 if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined in environment variables')
     throw new Error('Please define the MONGODB_URI environment variable inside .env')
 }
 
@@ -24,16 +25,27 @@ if (!cached) {
 
 async function dbConnect() {
     if (cached.conn) {
+        console.log('Using cached database connection')
         return cached.conn
     }
 
     if (!cached.promise) {
         const opts = {
             bufferCommands: false,
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+            family: 4
         }
 
-        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+        console.log('Connecting to MongoDB...')
+        cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+            console.log('MongoDB connected successfully')
             return mongoose
+        }).catch((error) => {
+            console.error('MongoDB connection error:', error)
+            cached.promise = null
+            throw error
         })
     }
 
@@ -41,6 +53,7 @@ async function dbConnect() {
         cached.conn = await cached.promise
     } catch (e) {
         cached.promise = null
+        console.error('Failed to establish database connection:', e)
         throw e
     }
 

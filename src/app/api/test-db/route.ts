@@ -6,20 +6,28 @@ import Settings from '@/src/models/Settings'
 
 export async function GET() {
     try {
+        console.log('Testing MongoDB connection...')
+        console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI)
+
         // Testar conexão
         await dbConnect()
+        console.log('Database connection successful')
 
         // Verificar se existem produtos
         const productsCount = await Product.countDocuments()
+        console.log('Products count:', productsCount)
 
         // Verificar se existem serviços
         const servicesCount = await Service.countDocuments()
+        console.log('Services count:', servicesCount)
 
         // Verificar se existem configurações
         const settingsCount = await Settings.countDocuments()
+        console.log('Settings count:', settingsCount)
 
         // Criar configuração padrão se não existir
         if (settingsCount === 0) {
+            console.log('Creating default settings...')
             await Settings.create({
                 siteName: 'Antonio Store',
                 siteDescription: 'Catálogo de produtos e serviços de tecnologia',
@@ -33,6 +41,7 @@ export async function GET() {
 
         // Criar produtos de exemplo se não existirem
         if (productsCount === 0) {
+            console.log('Creating sample products...')
             await Product.create([
                 {
                     name: "Smartphone Galaxy S23",
@@ -63,6 +72,7 @@ export async function GET() {
 
         // Criar serviços de exemplo se não existirem
         if (servicesCount === 0) {
+            console.log('Creating sample services...')
             await Service.create([
                 {
                     title: "Conserto de TVs",
@@ -110,7 +120,8 @@ export async function GET() {
                 productsCount: await Product.countDocuments(),
                 servicesCount: await Service.countDocuments(),
                 settingsCount: await Settings.countDocuments(),
-                connection: 'OK'
+                connection: 'OK',
+                environment: process.env.NODE_ENV || 'development'
             }
         })
 
@@ -121,6 +132,9 @@ export async function GET() {
             success: false,
             error: 'Erro na conexão com MongoDB',
             details: error.message,
+            stack: error.stack,
+            environment: process.env.NODE_ENV || 'development',
+            mongodbUriExists: !!process.env.MONGODB_URI,
             solution: 'Verifique se o arquivo .env.local está configurado com MONGODB_URI'
         }, { status: 500 })
     }
