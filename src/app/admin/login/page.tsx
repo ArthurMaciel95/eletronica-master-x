@@ -32,8 +32,12 @@ export default function AdminLogin() {
       if (response.ok) {
         const data = await response.json()
         console.log('Login bem-sucedido:', data)
+        
+        // Salvar token no localStorage
         localStorage.setItem('adminToken', data.token)
         console.log('Token salvo no localStorage, redirecionando...')
+        
+        // Redirecionar para o dashboard
         router.push('/admin/dashboard')
       } else {
         const errorData = await response.json()

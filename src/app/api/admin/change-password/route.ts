@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/mongodb'
+import dbConnect from '@/lib/mongodb'
 import Admin from '@/models/Admin'
 import jwt from 'jsonwebtoken'
 
@@ -16,7 +16,7 @@ const verifyToken = (token: string) => {
 // POST - Alterar senha do admin
 export async function POST(request: NextRequest) {
     try {
-        await connectToDatabase()
+        await dbConnect()
 
         // Verificar token de autorização
         const authHeader = request.headers.get('authorization')

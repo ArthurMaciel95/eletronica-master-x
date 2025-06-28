@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import dbConnect from '@/src/lib/mongodb'
-import Brand from '@/src/models/Brand'
+import dbConnect from '@/lib/mongodb'
+import Brand from '@/models/Brand'
 
 export async function GET() {
     try {

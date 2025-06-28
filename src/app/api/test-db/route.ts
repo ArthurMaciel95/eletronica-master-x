@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import dbConnect from '@/src/lib/mongodb'
-import Product from '@/src/models/Product'
-import Service from '@/src/models/Service'
-import Settings from '@/src/models/Settings'
-import Admin from '@/src/models/Admin'
+import dbConnect from '@/lib/mongodb'
+import Product from '@/models/Product'
+import Service from '@/models/Service'
+import Settings from '@/models/Settings'
+import Admin from '@/models/Admin'
 
 export async function GET() {
     try {

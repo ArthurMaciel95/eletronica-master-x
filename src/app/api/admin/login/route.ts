@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import dbConnect from '@/src/lib/mongodb'
-import Admin from '@/src/models/Admin'
+import dbConnect from '@/lib/mongodb'
+import Admin from '@/models/Admin'
 import jwt from 'jsonwebtoken'
 
 export async function POST(request: NextRequest) {
@@ -60,6 +60,9 @@ export async function POST(request: NextRequest) {
             { expiresIn: '7d' }
         )
 
+        console.log('API Login: Token JWT gerado:', token.substring(0, 20) + '...')
+        console.log('API Login: JWT_SECRET configurado:', !!process.env.JWT_SECRET)
+
         const response = NextResponse.json({
             success: true,
             message: 'Login realizado com sucesso',
@@ -80,6 +83,7 @@ export async function POST(request: NextRequest) {
             maxAge: 60 * 60 * 24 * 7 // 7 dias
         })
 
+        console.log('API Login: Cookie definido, retornando resposta')
         return response
 
     } catch (error: any) {

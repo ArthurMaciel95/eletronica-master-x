@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/mongodb'
+import dbConnect from '@/lib/mongodb'
 import Admin from '@/models/Admin'
 import jwt from 'jsonwebtoken'
 
@@ -16,7 +16,7 @@ const verifyToken = (token: string) => {
 // GET - Buscar perfil do admin
 export async function GET(request: NextRequest) {
     try {
-        await connectToDatabase()
+        await dbConnect()
 
         // Verificar token de autorização
         const authHeader = request.headers.get('authorization')
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 // PUT - Atualizar perfil do admin
 export async function PUT(request: NextRequest) {
     try {
-        await connectToDatabase()
+        await dbConnect()
 
         // Verificar token de autorização
         const authHeader = request.headers.get('authorization')
