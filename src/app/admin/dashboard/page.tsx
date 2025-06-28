@@ -61,8 +61,32 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    console.log('Iniciando logout...')
+    
+    // Remover token do localStorage
     localStorage.removeItem('adminToken')
+    console.log('Token removido do localStorage')
+    
+    // Remover cookie via API
+    try {
+      const response = await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (response.ok) {
+        console.log('Cookie removido com sucesso')
+      } else {
+        console.log('Erro ao remover cookie:', response.status)
+      }
+    } catch (error) {
+      console.log('Erro ao chamar API de logout:', error)
+    }
+    
+    // Redirecionar para login
     router.push('/admin/login')
   }
 
