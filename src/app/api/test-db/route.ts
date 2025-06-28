@@ -3,6 +3,7 @@ import dbConnect from '@/src/lib/mongodb'
 import Product from '@/src/models/Product'
 import Service from '@/src/models/Service'
 import Settings from '@/src/models/Settings'
+import Admin from '@/src/models/Admin'
 
 export async function GET() {
     try {
@@ -25,6 +26,10 @@ export async function GET() {
         const settingsCount = await Settings.countDocuments()
         console.log('Settings count:', settingsCount)
 
+        // Verificar se existem admins
+        const adminsCount = await Admin.countDocuments()
+        console.log('Admins count:', adminsCount)
+
         // Criar configuração padrão se não existir
         if (settingsCount === 0) {
             console.log('Creating default settings...')
@@ -36,6 +41,17 @@ export async function GET() {
                 contactAddress: 'São Paulo, SP',
                 whatsappNumber: '5511999999999',
                 companyDescription: 'Especialistas em tecnologia com anos de experiência no mercado. Oferecemos produtos de qualidade e serviços especializados.'
+            })
+        }
+
+        // Criar admin padrão se não existir
+        if (adminsCount === 0) {
+            console.log('Creating default admin...')
+            await Admin.create({
+                name: 'Administrador',
+                email: 'admin@antonio.com',
+                password: 'admin123',
+                role: 'super_admin'
             })
         }
 
@@ -120,8 +136,13 @@ export async function GET() {
                 productsCount: await Product.countDocuments(),
                 servicesCount: await Service.countDocuments(),
                 settingsCount: await Settings.countDocuments(),
+                adminsCount: await Admin.countDocuments(),
                 connection: 'OK',
-                environment: process.env.NODE_ENV || 'development'
+                environment: process.env.NODE_ENV || 'development',
+                defaultAdmin: {
+                    email: 'admin@antonio.com',
+                    password: 'admin123'
+                }
             }
         })
 
