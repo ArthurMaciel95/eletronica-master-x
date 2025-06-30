@@ -1,5 +1,7 @@
-import mongoose from 'mongoose'
+require('dotenv').config();
+const mongoose = require('mongoose');
 
+// Schema do produto (copiado do modelo)
 const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -17,20 +19,20 @@ const ProductSchema = new mongoose.Schema({
         required: [true, 'Preço do produto é obrigatório'],
         min: [0, 'Preço não pode ser negativo'],
         validate: {
-            validator: function (v: number) {
+            validator: function(v) {
                 return v >= 0
             },
             message: 'Preço deve ser um valor positivo'
         }
     },
-    images: {
-        type: [String],
-        required: [true, 'Pelo menos uma imagem é obrigatória'],
+    image: {
+        type: String,
+        required: [true, 'URL da imagem é obrigatória'],
         validate: {
-            validator: function (arr: string[]) {
-                return Array.isArray(arr) && arr.length > 0
+            validator: function (v) {
+                return /^https?:\/\/.+/.test(v)
             },
-            message: 'Pelo menos uma imagem é obrigatória'
+            message: 'URL da imagem deve ser válida'
         }
     },
     category: {
@@ -49,6 +51,27 @@ const ProductSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
-})
+});
 
-export default mongoose.models.Product || mongoose.model('Product', ProductSchema) 
+const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+
+async function migrateProducts() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Conectado ao MongoDB');
+
+    // Atualizar produtos que não têm o campo price
+    const result = await Product.updateMany(
+      { price: { $exists: false } },
+      { $set: { price: 0 } }
+    );
+
+    console.log(`Migração concluída: ${result.modifiedCount} produtos atualizados`);
+  } catch (error) {
+    console.error('Erro na migração:', error);
+  } finally {
+    await mongoose.disconnect();
+  }
+}
+
+migrateProducts(); 

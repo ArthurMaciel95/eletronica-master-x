@@ -51,3 +51,28 @@ body {
   overflow: hidden;
   position: relative;
 }
+
+/* Custom styles for compact swiper */
+.compact-swiper .swiper-button-next,
+.compact-swiper .swiper-button-prev {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 8px !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border-radius: 50% !important;
+}
+
+.compact-swiper .swiper-pagination {
+  bottom: 2px !important;
+}
+
+.compact-swiper .swiper-pagination-bullet {
+  width: 4px !important;
+  height: 4px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.compact-swiper .swiper-pagination-bullet-active {
+  background: white !important;
+}

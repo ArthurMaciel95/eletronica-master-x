@@ -3,12 +3,22 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import { formatCurrency } from '@/lib/utils';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface Product {
   _id: string
   name: string
   description: string
-  image: string
+  price: number
+  images: string[]
+  image?: string
   category: string
   inStock: boolean
   featured: boolean
@@ -65,6 +75,10 @@ export default function AdminProducts() {
     return new Date(dateString).toLocaleDateString('pt-BR')
   }
 
+  const getProductImages = (product: Product) => {
+    return product.images || (product.image ? [product.image] : [])
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -108,11 +122,31 @@ export default function AdminProducts() {
                 <li key={product._id} className="px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-16 w-16 rounded-lg object-cover"
-                      />
+                      <div className="relative h-16 w-16 rounded-lg overflow-hidden">
+                        {getProductImages(product).length > 0 ? (
+                          <Swiper
+                            modules={[Navigation, Pagination]}
+                            navigation={getProductImages(product).length > 1}
+                            pagination={getProductImages(product).length > 1 ? { clickable: true } : false}
+                            loop={getProductImages(product).length > 1}
+                            className="h-full compact-swiper"
+                          >
+                            {getProductImages(product).map((image, index) => (
+                              <SwiperSlide key={index}>
+                                <img
+                                  src={image}
+                                  alt={`${product.name} - Imagem ${index + 1}`}
+                                  className="h-full w-full object-cover"
+                                />
+                              </SwiperSlide>
+                            ))}
+                          </Swiper>
+                        ) : (
+                          <div className="h-full w-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+                            Sem Imagem
+                          </div>
+                        )}
+                      </div>
                       <div className="ml-4">
                         <h3 className="text-lg font-medium text-gray-900">
                           {product.name}
@@ -121,6 +155,9 @@ export default function AdminProducts() {
                           {product.description}
                         </p>
                         <div className="flex items-center mt-1 space-x-2">
+                          <span className="text-sm font-bold text-primary-600">
+                            {formatCurrency(product.price)}
+                          </span>
                           <span className="text-xs text-primary-600 font-medium">
                             {product.category}
                           </span>

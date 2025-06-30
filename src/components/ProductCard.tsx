@@ -1,15 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import { formatCurrency } from '@/lib/utils';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface Product {
   _id: string;
   name: string;
   description: string;
-  image: string;
+  price: number;
+  images: string[];
   category?: string;
   inStock?: boolean;
   featured?: boolean;
+  image?: string;
 }
 
 interface ProductCardProps {
@@ -35,16 +45,37 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   };
 
+  const images = product.images || (product.image ? [product.image] : []);
+
   return (
     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-      {/* Product Image */}
+      {/* Product Image Carousel */}
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-4 right-4 flex flex-col gap-2">
+        {images.length > 0 ? (
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation={images.length > 1}
+            pagination={images.length > 1 ? { clickable: true } : false}
+            loop={images.length > 1}
+            className="h-full"
+          >
+            {images.map((image, index) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={image}
+                  alt={`${product.name} - Imagem ${index + 1}`}
+                  className="w-full h-full object-contain"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500">Sem Imagem</span>
+          </div>
+        )}
+        
+        <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
           {product.featured && (
             <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
               Destaque
@@ -63,6 +94,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
           {product.description}
         </p>
+
+        {/* Price */}
+        <div className="mb-4">
+          <span className="text-2xl font-bold text-primary-600">
+            {formatCurrency(product.price)}
+          </span>
+        </div>
 
         {/* Category and Status */}
         <div className="flex items-center justify-between mb-4">

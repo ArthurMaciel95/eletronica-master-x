@@ -17,7 +17,15 @@ export async function GET(
             )
         }
 
-        return NextResponse.json(product)
+        // Converter para o formato esperado pelo frontend
+        const productData = product.toObject()
+
+        // Se o produto ainda tem o campo 'image' antigo, converter para 'images'
+        if (productData.image && (!productData.images || !Array.isArray(productData.images))) {
+            productData.images = [productData.image]
+        }
+
+        return NextResponse.json(productData)
     } catch (error: any) {
         return NextResponse.json(
             { error: 'Erro ao buscar produto' },
@@ -34,11 +42,30 @@ export async function PUT(
         await dbConnect()
         const body = await request.json()
 
-        const { name, description, image, category, inStock, featured } = body
+        const { name, description, price, images, category, inStock, featured } = body
 
-        if (!name || !description || !image) {
+        if (!name || !description || !images || !Array.isArray(images) || images.length === 0 || price === undefined) {
             return NextResponse.json(
-                { error: 'Nome, descrição e imagem são obrigatórios' },
+                { error: 'Nome, descrição, imagens e preço são obrigatórios' },
+                { status: 400 }
+            )
+        }
+
+        // Validar apenas se é uma string não vazia
+        const validImages = images.filter((img: string) => {
+            return img && typeof img === 'string' && img.trim() !== '';
+        });
+
+        if (validImages.length === 0) {
+            return NextResponse.json(
+                { error: 'Pelo menos uma imagem é obrigatória' },
+                { status: 400 }
+            )
+        }
+
+        if (price < 0) {
+            return NextResponse.json(
+                { error: 'Preço não pode ser negativo' },
                 { status: 400 }
             )
         }
@@ -48,7 +75,8 @@ export async function PUT(
             {
                 name,
                 description,
-                image,
+                price,
+                images: validImages,
                 category: category || 'Outros',
                 inStock: inStock !== undefined ? inStock : true,
                 featured: featured || false

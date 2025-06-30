@@ -40,9 +40,9 @@ export default function Hero() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Bem-vindo à {displaySettings?.siteName || 'Carregando...'}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-3xl mx-auto">
+          {/* <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-3xl mx-auto">
             {displaySettings?.siteDescription || 'Carregando...'}
-          </p>
+          </p> */}
           <p className="text-lg mb-10 text-primary-200 max-w-2xl mx-auto">
             {displaySettings?.companyDescription || 'Carregando...'}
           </p>

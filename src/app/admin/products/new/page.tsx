@@ -7,7 +7,8 @@ import Link from 'next/link'
 interface ProductForm {
   name: string
   description: string
-  image: string
+  price: number
+  images: string[]
   category: string
   inStock: boolean
   featured: boolean
@@ -20,7 +21,8 @@ export default function NewProduct() {
   const [formData, setFormData] = useState<ProductForm>({
     name: '',
     description: '',
-    image: '',
+    price: 0,
+    images: [],
     category: 'Outros',
     inStock: true,
     featured: false
@@ -53,7 +55,7 @@ export default function NewProduct() {
     }
   }
 
-  const handleInputChange = (field: keyof ProductForm, value: string | boolean) => {
+  const handleInputChange = (field: keyof ProductForm, value: string | boolean | number | string[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -118,19 +120,106 @@ export default function NewProduct() {
                 />
               </div>
 
-              {/* URL da Imagem */}
+              {/* Preço */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  URL da Imagem *
+                  Preço *
                 </label>
-                <input
-                  type="url"
-                  required
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-gray-500"
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-gray-500 sm:text-sm">R$</span>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={formData.price === 0 ? '' : formData.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^\d,]/g, '').replace(',', '.');
+                      const numValue = parseFloat(value) || 0;
+                      handleInputChange('price', numValue);
+                    }}
+                    className="mt-1 block w-full border border-gray-300 rounded-md pl-10 px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-gray-500"
+                    placeholder="0,00"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">Use vírgula como separador decimal (ex: 1.234,56)</p>
+              </div>
+
+              {/* Imagens */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  URLs das Imagens *
+                </label>
+                <div className="mt-1 flex gap-2">
+                  <input
+                    type="url"
+                    id="imageUrl"
+                    placeholder="https://exemplo.com/imagem.jpg"
+                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-gray-500"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const input = e.target as HTMLInputElement;
+                        if (input.value.trim()) {
+                          handleInputChange('images', [...formData.images, input.value.trim()]);
+                          input.value = '';
+                        }
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const input = document.getElementById('imageUrl') as HTMLInputElement;
+                      if (input.value.trim()) {
+                        handleInputChange('images', [...formData.images, input.value.trim()]);
+                        input.value = '';
+                      }
+                    }}
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    Adicionar
+                  </button>
+                </div>
+                
+                {/* Lista de imagens */}
+                {formData.images.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    <p className="text-sm text-gray-600">Imagens adicionadas:</p>
+                    {formData.images.map((image, index) => (
+                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-md">
+                        <img
+                          src={image}
+                          alt={`Preview ${index + 1}`}
+                          className="w-12 h-12 object-cover rounded"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/48x48?text=Erro';
+                          }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-700 truncate">{image}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newImages = formData.images.filter((_, i) => i !== index);
+                            handleInputChange('images', newImages);
+                          }}
+                          className="text-red-600 hover:text-red-800 p-1"
+                          title="Remover imagem"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                <p className="mt-1 text-xs text-gray-500">
+                  Digite a URL da imagem e pressione Enter ou clique em Adicionar
+                </p>
               </div>
 
               {/* Categoria */}
