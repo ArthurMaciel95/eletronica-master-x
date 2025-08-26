@@ -34,7 +34,10 @@ export default function Hero() {
   const displaySettings = settings;
 
   return (
-    <section className="bg-[url('/img/background-hero.png')] bg-no-repeat bg-cover text-white py-20">
+    <section
+      style={{ backgroundImage: "url('/img/background-hero.png')" }}
+      className=" bg-no-repeat bg-cover text-white py-20"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
           <div className="flex flex-col">
