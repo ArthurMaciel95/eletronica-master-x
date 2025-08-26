@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import BrandGrid from "./BrandGrid";
 
 interface Settings {
   siteName: string;
@@ -18,55 +19,80 @@ export default function Hero() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('/api/settings');
+      const response = await fetch("/api/settings");
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
       }
     } catch (err) {
-      console.error('Erro ao carregar configurações:', err);
+      console.error("Erro ao carregar configurações:", err);
     }
   };
 
   // Fallback settings
 
-
-  const displaySettings = settings 
+  const displaySettings = settings;
 
   return (
-    <section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20">
+    <section className="bg-[url('/img/background-hero.png')] bg-no-repeat bg-cover text-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Bem-vindo à {displaySettings?.siteName || 'Carregando...'}
-          </h1>
-          {/* <p className="text-xl md:text-2xl mb-8 text-primary-100 max-w-3xl mx-auto">
-            {displaySettings?.siteDescription || 'Carregando...'}
-          </p> */}
-          <p className="text-lg mb-10 text-primary-200 max-w-2xl mx-auto">
-            {displaySettings?.companyDescription || 'Carregando...'}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#produtos"
-              className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold text-lg transition-colors duration-200"
-            >
-              Ver Catálogo
-            </a>
-            <a
-              href={`https://wa.me/${displaySettings?.whatsappNumber || ''}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors duration-200 flex items-center justify-center"
-            >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
-              Fale Conosco
-            </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+          <div className="flex flex-col">
+            <h2 className="text-3xl text-white font-bold ">
+              Conserto, Compra, Venda e Manutenção <br />
+              de eletrônicos
+            </h2>
+            <p className="my-5 text-lg max-w-[470px]">
+              Mais de 40 anos de experiência em reparos, adaptações e vendas de
+              equipamentos eletronicos com qualidade e ganrantia.
+            </p>
+            <ul className="space-y-2 list-disc ml-5">
+              <li>Conserto de TVs, micro-ondas e eletroeletrônicos em geral</li>
+              <li>Reparos em computadores e informática</li>
+              <li>Manutenção de instrumentos musicais</li>
+              <li>Serviços em equipamentos médico-hospitalares</li>
+              <li>Conserto de placas automotivas</li>
+              <li>Compra e venda de aparelhos eletroeletrônicos</li>
+              <li>Contratos de manutenção corretiva e preventiva</li>
+            </ul>
+            <div className="mt-6 flex items-start justify-start">
+              <span className="inline-flex items-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-lg text-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2l4 -4"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                </svg>
+                Orçamento grátis com garantia
+              </span>
+            </div>
+          </div>
+          <div>
+            {/* Grid de Marcas */}
+
+            <div className="bg-black/30 rounded-lg p-4">
+              {/* Grid de Marcas */}
+              <BrandGrid />
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
-} 
+}

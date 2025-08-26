@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface Settings {
   siteName: string;
@@ -23,13 +23,13 @@ export default function Footer() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('/api/settings');
+      const response = await fetch("/api/settings");
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
       }
     } catch (err) {
-      console.error('Erro ao carregar configurações:', err);
+      console.error("Erro ao carregar configurações:", err);
     } finally {
       setLoading(false);
     }
@@ -37,22 +37,26 @@ export default function Footer() {
 
   // Fallback settings
   const fallbackSettings: Settings = {
-    siteName: 'Antonio Store',
-    siteDescription: 'Catálogo de produtos e serviços de tecnologia',
-    contactEmail: 'contato@antonio.com',
-    contactPhone: '(11) 99999-9999',
-    contactAddress: 'São Paulo, SP',
-    whatsappNumber: '5511999999999',
-    companyDescription: 'Especialistas em tecnologia com anos de experiência no mercado. Oferecemos produtos de qualidade e serviços especializados.'
+    siteName: "Antonio Store",
+    siteDescription: "Catálogo de produtos e serviços de tecnologia",
+    contactEmail: "contato@antonio.com",
+    contactPhone: "(11) 99999-9999",
+    contactAddress: "São Paulo, SP",
+    whatsappNumber: "5511999999999",
+    companyDescription:
+      "Especialistas em tecnologia com anos de experiência no mercado. Oferecemos produtos de qualidade e serviços especializados.",
   };
 
   const displaySettings = settings || fallbackSettings;
 
   const formatWhatsAppNumber = (number: string) => {
     // Remove non-numeric characters and format
-    const cleanNumber = number.replace(/\D/g, '');
+    const cleanNumber = number.replace(/\D/g, "");
     if (cleanNumber.length === 13) {
-      return `(${cleanNumber.slice(2, 4)}) ${cleanNumber.slice(4, 9)}-${cleanNumber.slice(9)}`;
+      return `(${cleanNumber.slice(2, 4)}) ${cleanNumber.slice(
+        4,
+        9
+      )}-${cleanNumber.slice(9)}`;
     }
     return number;
   };
@@ -64,10 +68,12 @@ export default function Footer() {
           {/* Logo and Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-sm">N</span>
-              </div>
-              <span className="ml-2 text-xl font-bold">{displaySettings.siteName}</span>
+              <img
+                src="/img/eletronica-master.png"
+                className="h-20 w-auto"
+                alt="Logo Eletrônica Master"
+              />
+              {/* <span className="ml-2 text-xl font-bold">{displaySettings.siteName}</span> */}
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               {displaySettings.companyDescription}
@@ -150,7 +156,7 @@ export default function Footer() {
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                <a 
+                <a
                   href={`mailto:${displaySettings.contactEmail}`}
                   className="text-sm hover:text-white transition-colors"
                 >
@@ -165,7 +171,7 @@ export default function Footer() {
                 >
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
-                <a 
+                <a
                   href={`tel:${displaySettings.contactPhone}`}
                   className="text-sm hover:text-white transition-colors"
                 >
@@ -184,7 +190,9 @@ export default function Footer() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm">{displaySettings.contactAddress}</span>
+                <span className="text-sm">
+                  {displaySettings.contactAddress}
+                </span>
               </div>
               <div className="flex items-center">
                 <svg
@@ -194,13 +202,14 @@ export default function Footer() {
                 >
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
-                <a 
+                <a
                   href={`https://wa.me/${displaySettings.whatsappNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm hover:text-green-400 transition-colors"
                 >
-                  WhatsApp: {formatWhatsAppNumber(displaySettings.whatsappNumber)}
+                  WhatsApp:{" "}
+                  {formatWhatsAppNumber(displaySettings.whatsappNumber)}
                 </a>
               </div>
             </div>
@@ -213,10 +222,8 @@ export default function Footer() {
             © 2024 {displaySettings.siteName}. Todos os direitos reservados.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
-           
             <div className="flex items-center">
-          
-              <a 
+              <a
                 href="https://arcodesolucoes.com.br/"
                 target="_blank"
                 rel="noopener noreferrer"
