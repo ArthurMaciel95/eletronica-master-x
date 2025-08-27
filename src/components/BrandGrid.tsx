@@ -30,8 +30,8 @@ const brands = [
     logo: "https://logodownload.org/wp-content/uploads/2016/09/tcl-logo-1.png",
   },
   {
-    name: "Hisense",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Hisense.svg/1200px-Hisense.svg.png",
+    name: "Asus",
+    logo: "https://logosarchive.com/wp-content/uploads/2022/04/Asus-logo.svg",
   },
   {
     name: "AOC",
@@ -41,6 +41,22 @@ const brands = [
     name: "JVC",
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/JVC_Logo.svg/1200px-JVC_Logo.svg.png",
   },
+  {
+    name: "Pioneer",
+    logo: "https://www.marefa.org/w/images/thumb/b/b1/Pioneer_logo.svg/1200px-Pioneer_logo.svg.png",
+  },
+  {
+    name: "Sony",
+    logo: "https://static.miraheze.org/nonciclopediawiki/c/ca/Sony_logo.svg",
+  },
+  {
+    name: "playstation e xbox",
+    logo: "/img/playstation_xbox.png",
+  },
+  {
+    name: "JBL",
+    logo: "https://vectorseek.com/wp-content/uploads/2023/10/JBL-Orange-Logo-Vector.svg-1-1.png",
+  },
 ];
 
 export default function BrandGrid() {
@@ -49,16 +65,22 @@ export default function BrandGrid() {
       {brands.map((brand, idx) => {
         const vertical = idx % 3 === 1 ? "items-end" : "items-start";
         return (
-              <div key={brand.name + idx} className={`flex flex-col ${vertical} min-w-[120px]`}>
-                <div className="bg-white rounded-lg p-3 flex items-center justify-center mb-2 shadow">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    title={brand.name}
-                    className="h-16 w-auto object-contain"
-                  />
-                </div>
-              </div>
+          <div
+            key={brand.name + idx}
+            className={`flex flex-col ${vertical} min-w-[120px]`}
+          >
+            <div
+              className="bg-white w-full rounded-lg p-3 flex items-center justify-center mb-2 shadow transition-transform duration-300 hover:scale-110 hover:rotate-3 hover:shadow-lg hover:shadow-blue-300 group"
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src={brand.logo}
+                alt={brand.name}
+                title={brand.name}
+                className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
+              />
+            </div>
+          </div>
         );
       })}
     </div>

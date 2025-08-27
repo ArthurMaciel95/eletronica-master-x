@@ -46,14 +46,16 @@ export default function Hero() {
               de eletrônicos
             </h2>
             <p className="my-5 text-lg max-w-[470px]">
-              Mais de 40 anos de experiência em reparos, adaptações e vendas de
-              equipamentos eletronicos com qualidade e ganrantia.
+              Mais de 40 anos de experiência em consertos de aparelhos e
+              equipamentos eletroeletrônicos
             </p>
             <ul className="space-y-2 list-disc ml-5">
-              <li>Conserto de TVs, micro-ondas e eletroeletrônicos em geral</li>
-              <li>Reparos em computadores e informática</li>
-              <li>Manutenção de instrumentos musicais</li>
-              <li>Serviços em equipamentos médico-hospitalares</li>
+              <li>
+                Conserto de tvs, aparelhos de som e eletroeletrônicos em geral
+              </li>
+              <li>Conserto em computadores e informática</li>
+              <li>Conserto de instrumentos musicais</li>
+              <li>Conserto de equipamentos e instrumentos musicais</li>
               <li>Conserto de placas automotivas</li>
               <li>Compra e venda de aparelhos eletroeletrônicos</li>
               <li>Contratos de manutenção corretiva e preventiva</li>
@@ -82,7 +84,7 @@ export default function Hero() {
                     fill="none"
                   />
                 </svg>
-                Orçamento grátis com garantia
+                Orçamento grátis e conserto com garantia
               </span>
             </div>
           </div>

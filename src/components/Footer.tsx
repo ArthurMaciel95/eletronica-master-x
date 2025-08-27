@@ -69,7 +69,7 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
               <img
-                src="/img/eletronica-master.png"
+                src="./img/eletronica-master.png"
                 className="h-20 w-auto"
                 alt="Logo Eletrônica Master"
               />
