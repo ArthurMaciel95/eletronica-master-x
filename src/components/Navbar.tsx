@@ -11,11 +11,9 @@ interface Settings {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [user, setUser] = useState<{ name: string } | null>(null);
 
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
+  // Corrige: define fetchSettings antes do useEffect
   const fetchSettings = async () => {
     try {
       const response = await fetch("/api/settings");
@@ -25,6 +23,33 @@ export default function Navbar() {
       }
     } catch (err) {
       console.error("Erro ao carregar configurações:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+    // Checa se usuário comum está logado
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("@token_xmaster");
+      const cliente = localStorage.getItem("cliente");
+      if (token && cliente) {
+        try {
+          const obj = JSON.parse(cliente);
+          setUser({ name: obj.name || obj.nome || "Usuário" });
+        } catch {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("@token_xmaster");
+      localStorage.removeItem("cliente");
+      window.location.reload();
     }
   };
 
@@ -59,19 +84,19 @@ export default function Navbar() {
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-8">
             <a
-              href="#"
+              href="/#"
               className="text-white hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Início
             </a>
             <a
-              href="#produtos"
+              href="/#produtos"
               className="text-white hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Produtos
             </a>
             <a
-              href="#servicos"
+              href="/#servicos"
               className="text-white hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Serviços
@@ -83,7 +108,7 @@ export default function Navbar() {
               Sobre
             </a>
             <a
-              href="#contato"
+              href="/#contato"
               className="text-white hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Contato
@@ -103,12 +128,44 @@ export default function Navbar() {
               </svg>
               WhatsApp
             </a>
-            <a
+            {/* <a
               href="/admin/login"
               className="ml-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Admin
-            </a>
+            </a> */}
+            {/* Usuário comum logado */}
+            {user && (
+              <div className="ml-4 relative group">
+                <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded-md text-sm font-medium">
+                  <span className="font-semibold">{user.name}</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                  <div className="px-4 py-2 text-gray-700 text-sm border-b">
+                    Usuário comum
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 text-sm"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -157,31 +214,31 @@ export default function Navbar() {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
             <a
-              href="#"
+              href="/#"
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >
               Início
             </a>
             <a
-              href="#produtos"
+              href="/#produtos"
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >
               Produtos
             </a>
             <a
-              href="#servicos"
+              href="/#servicos"
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >
               Serviços
             </a>
             <a
-              href="#sobre"
+              href="/#sobre"
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >
               Sobre
             </a>
             <a
-              href="#contato"
+              href="/#contato"
               className="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >
               Contato
@@ -201,12 +258,27 @@ export default function Navbar() {
               </svg>
               WhatsApp
             </a>
-            <a
+            {/* <a
               href="/admin/login"
               className="mt-2 bg-primary-600 hover:bg-primary-700 text-white block px-3 py-2 rounded-md text-base font-medium text-center"
             >
               Admin
-            </a>
+            </a> */}
+            {/* Usuário comum logado mobile */}
+            {user && (
+              <div className="mt-2 bg-gray-100 rounded-md px-3 py-2 flex flex-col items-start">
+                <div className="font-semibold text-gray-800 mb-1">
+                  {user.name}
+                </div>
+                <div className="text-xs text-gray-500 mb-2">Usuário comum</div>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 text-sm hover:underline"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

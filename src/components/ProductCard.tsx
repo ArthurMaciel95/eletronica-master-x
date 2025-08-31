@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { formatCurrency } from '@/lib/utils';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import { formatCurrency } from "@/lib/utils";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface Product {
   _id: string;
@@ -74,7 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-gray-500">Sem Imagem</span>
           </div>
         )}
-        
+
         <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
           {product.featured && (
             <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
@@ -139,6 +139,44 @@ export default function ProductCard({ product }: ProductCardProps) {
           </svg>
           {product.inStock ? "Entrar em contato" : "Produto Indisponível"}
         </button>
+        {/* Add to Cart Button */}
+        {/* <button
+          onClick={() => {
+            if (!product.inStock) return;
+            // Recupera carrinho atual
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            // Adiciona produto (garante que image está presente)
+            cart.push({
+              ...product,
+              image:
+                product.image || (product.images && product.images[0]) || "",
+            });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            // Redireciona para carrinho
+            window.location.href = "/carrinho";
+          }}
+          disabled={!product.inStock}
+          className={`w-full font-semibold py-3 px-4 rounded-lg mt-2 transition-colors duration-200 flex items-center justify-center ${
+            product.inStock
+              ? "bg-blue-700 hover:bg-blue-800 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+        >
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.5 17h9a1 1 0 00.85-1.53L17 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7"
+            />
+          </svg>
+          {product.inStock ? "Adicionar ao carrinho" : "Indisponível"}
+        </button> */}
       </div>
     </div>
   );
