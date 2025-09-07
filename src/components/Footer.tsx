@@ -1,53 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useSettings } from "@/hooks/useSettings";
 
-interface Settings {
-  siteName: string;
-  siteDescription: string;
-  contactEmail: string;
-  contactPhone: string;
-  contactAddress: string;
-  whatsappNumber: string;
-  companyDescription: string;
-}
-
+// ...interface agora está no hook
 export default function Footer() {
-  const [settings, setSettings] = useState<Settings | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
-    try {
-      const response = await fetch("/api/settings");
-      if (response.ok) {
-        const data = await response.json();
-        setSettings(data);
-      }
-    } catch (err) {
-      console.error("Erro ao carregar configurações:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fallback settings
-  const fallbackSettings: Settings = {
-    siteName: "Antonio Store",
-    siteDescription: "Catálogo de produtos e serviços de tecnologia",
-    contactEmail: "contato@antonio.com",
-    contactPhone: "(11) 99999-9999",
-    contactAddress: "São Paulo, SP",
-    whatsappNumber: "5511999999999",
-    companyDescription:
-      "Especialistas em tecnologia com anos de experiência no mercado. Oferecemos produtos de qualidade e serviços especializados.",
-  };
-
-  const displaySettings = settings || fallbackSettings;
+  const { settings: displaySettings, loading } = useSettings();
 
   const formatWhatsAppNumber = (number: string) => {
     // Remove non-numeric characters and format
