@@ -47,7 +47,7 @@ import React, { useEffect, useState } from "react";
 
 export default function ConfirmacaoPage() {
   const [cart, setCart] = useState<any[]>([]);
-  const frete = 10;
+  const frete = 70;
   const [total, setTotal] = useState(0);
 
   useEffect(() => {

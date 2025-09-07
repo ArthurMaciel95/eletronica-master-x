@@ -46,7 +46,7 @@ export default function LoginClientePage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="flex-1 max-w-md mx-auto px-4 py-12 text-gray-800 bg-white rounded-lg shadow mt-8 mb-8">
+      <main className="flex-1 max-w-[600px] w-full mx-auto px-4 py-12 text-gray-800 bg-white rounded-lg shadow mt-8 mb-8">
         <h1 className="text-2xl font-bold mb-6">Login do Cliente</h1>
         <form
           className="space-y-4"
@@ -87,6 +87,17 @@ export default function LoginClientePage() {
           >
             {isSubmitting ? "Entrando..." : "Entrar"}
           </button>
+          <div className="flex flex-col items-center gap-2 mt-4 text-sm">
+            <a href="/cadastro" className="text-blue-700 hover:underline">
+              Ainda não tem cadastro? Cadastre-se
+            </a>
+            <a
+              href="/recuperar-senha"
+              className="text-blue-700 hover:underline"
+            >
+              Esqueceu a senha?
+            </a>
+          </div>
         </form>
       </main>
       <Footer />

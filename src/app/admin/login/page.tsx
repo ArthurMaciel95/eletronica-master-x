@@ -1,56 +1,47 @@
-'use client'
+"use client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+const schema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(4, "Senha obrigatória"),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-
+  const onSubmit = async (data: FormData) => {
+    setError("");
     try {
-      console.log('Tentando fazer login...')
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      })
-
-      console.log('Resposta do login:', response.status)
-      
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       if (response.ok) {
-        const data = await response.json()
-        console.log('Login bem-sucedido:', data)
-        
-        // Salvar token no localStorage
-        localStorage.setItem('adminToken', data.token)
-        console.log('Token salvo no localStorage, redirecionando...')
-        
-        // Redirecionar para o dashboard
-        router.push('/admin/dashboard')
+        const result = await response.json();
+        localStorage.setItem("adminToken", result.token);
+        router.push("/admin/dashboard");
       } else {
-        const errorData = await response.json()
-        console.log('Erro no login:', errorData)
-        setError(errorData.message || 'Credenciais inválidas')
+        const errorData = await response.json();
+        setError(errorData.message || "Credenciais inválidas");
       }
     } catch (err) {
-      console.error('Erro ao fazer login:', err)
-      setError('Erro ao fazer login. Tente novamente.')
-    } finally {
-      setLoading(false)
+      setError("Erro ao fazer login. Tente novamente.");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -70,7 +61,7 @@ export default function AdminLogin() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                 {error}
@@ -78,55 +69,63 @@ export default function AdminLogin() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <div className="mt-1">
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
-                  required
-                  value={credentials.email}
-                  onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                  {...register("email")}
                   className="appearance-none block text-gray-500 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 />
+                {errors.email && (
+                  <span className="text-red-600 text-xs">
+                    {errors.email.message}
+                  </span>
+                )}
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Senha
               </label>
               <div className="mt-1">
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
-                  value={credentials.password}
-                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  {...register("password")}
                   className="appearance-none block text-gray-500 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 />
+                {errors.password && (
+                  <span className="text-red-600 text-xs">
+                    {errors.password.message}
+                  </span>
+                )}
               </div>
             </div>
 
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Entrando...' : 'Entrar'}
+                {isSubmitting ? "Entrando..." : "Entrar"}
               </button>
             </div>
           </form>
-
-          
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -135,7 +135,7 @@ export default function Navbar() {
               Admin
             </a> */}
             {/* Usuário comum logado */}
-            {user && (
+            {user ? (
               <div className="ml-4 relative group">
                 <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded-md text-sm font-medium">
                   <span className="font-semibold">{user.name}</span>
@@ -165,6 +165,13 @@ export default function Navbar() {
                   </button>
                 </div>
               </div>
+            ) : (
+              <a
+                href="/login"
+                className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Login
+              </a>
             )}
           </div>
 
@@ -265,7 +272,7 @@ export default function Navbar() {
               Admin
             </a> */}
             {/* Usuário comum logado mobile */}
-            {user && (
+            {user ? (
               <div className="mt-2 bg-gray-100 rounded-md px-3 py-2 flex flex-col items-start">
                 <div className="font-semibold text-gray-800 mb-1">
                   {user.name}
@@ -278,6 +285,13 @@ export default function Navbar() {
                   Logout
                 </button>
               </div>
+            ) : (
+              <a
+                href="/login"
+                className="mt-2 bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium text-center"
+              >
+                Login
+              </a>
             )}
           </div>
         </div>

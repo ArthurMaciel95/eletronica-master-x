@@ -1,44 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Defina sua API KEY do Asaas no .env.local como ASAAS_API_KEY
+// Use sua chave de API do Asaas em .env.local
 const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjY0ZWU3MWE5LWEyMzQtNDhmZi05MTIwLTA4N2Q3ZDg4Y2ZhNjo6JGFhY2hfNWQxYTc4NDMtYTQyNC00NThlLTg3MjktMzYzMDI1MTI1ZmMx';
-
-// Sandbox: https://api-sandbox.asaas.com/v3
-// Produção: https://api.asaas.com/v3
-const ASAAS_API_URL = 'https://api-sandbox.asaas.com/v3/payments';
+const ASAAS_API_URL = 'https://api.asaas.com/v3/pix/addressKeys';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        // Espera: { customer, value, description }
-        const { customer, value, description } = body;
-
-        if (!customer || !value) {
+        // Espera: { type, cpfCnpj, accountId }
+        const { type, cpfCnpj, accountId } = body;
+        if (!type || !cpfCnpj || !accountId) {
             return NextResponse.json({ error: 'Dados obrigatórios ausentes.' }, { status: 400 });
         }
-        console.log(ASAAS_API_KEY)
         const response = await fetch(ASAAS_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'User-Agent': 'eletronica-master-x',
                 'access_token': ASAAS_API_KEY || '',
             },
             body: JSON.stringify({
-                customer,
-                billingType: 'PIX',
-                value,
-                description: description || 'Pagamento via Pix',
-                dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+                type: 'EVP'
             }),
         });
-
         const data = await response.json();
         if (!response.ok) {
             return NextResponse.json({ error: data }, { status: 400 });
         }
         return NextResponse.json(data);
     } catch (err) {
-        return NextResponse.json({ error: 'Erro ao criar cobrança.' }, { status: 500 });
+        return NextResponse.json({ error: 'Erro ao criar chave Pix.' }, { status: 500 });
     }
 }

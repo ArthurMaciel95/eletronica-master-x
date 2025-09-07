@@ -49,7 +49,10 @@ function Etapas({ etapaAtual = 2 }) {
 
 export default function CheckoutPage() {
   const [hasToken, setHasToken] = React.useState<null | boolean>(null);
-  const router = typeof window !== "undefined" ? require("next/navigation").useRouter() : null;
+  const router =
+    typeof window !== "undefined"
+      ? require("next/navigation").useRouter()
+      : null;
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -78,8 +81,18 @@ export default function CheckoutPage() {
           Para continuar, faça o cadastro ou, caso já tenha, realize o login.
         </div>
         <div className="flex gap-4">
-          <a href="/cadastro?redirect=checkout" className="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200">Fazer cadastro</a>
-          <a href="/login?redirect=checkout" className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200">Já tenho cadastro</a>
+          <a
+            href="/cadastro?redirect=checkout"
+            className="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200"
+          >
+            Fazer cadastro
+          </a>
+          <a
+            href="/login?redirect=checkout"
+            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-200"
+          >
+            Já tenho cadastro
+          </a>
         </div>
       </main>
       <Footer />

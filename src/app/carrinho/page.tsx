@@ -53,7 +53,7 @@ export default function CarrinhoPage() {
   }, []);
 
   const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
-  const frete = 10;
+  const frete = 70;
   const totalComFrete = total + frete;
 
   return (

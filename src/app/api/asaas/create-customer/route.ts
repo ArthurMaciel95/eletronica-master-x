@@ -4,7 +4,7 @@ import dbConnect from '@/lib/mongodb';
 import Customer from '@/models/Customer';
 import bcrypt from 'bcryptjs';
 
-const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmE5NjM3YTE2LTZlNzEtNDUwMy04NzI2LWM2ZWI1YTdjODkyZTo6JGFhY2hfNTM1OTUyNjAtNzVhNi00MWVhLThlYmUtYjk4MGQ0Y2M1NDZi';
+const ASAAS_API_KEY = '$aact_hmlg_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjY0ZWU3MWE5LWEyMzQtNDhmZi05MTIwLTA4N2Q3ZDg4Y2ZhNjo6JGFhY2hfNWQxYTc4NDMtYTQyNC00NThlLTg3MjktMzYzMDI1MTI1ZmMx';
 // Sandbox: https://api-sandbox.asaas.com/v3
 // Produção: https://api.asaas.com/v3
 const ASAAS_API_URL = 'https://api-sandbox.asaas.com/v3/customers';

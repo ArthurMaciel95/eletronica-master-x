@@ -15,7 +15,7 @@ const CustomerSchema = new Schema<ICustomer>({
     email: { type: String, required: true },
     cpfCnpj: { type: String, required: true },
     phone: { type: String },
-    address: { type: Schema.Types.Mixed },
+    address: { type: Schema.Types.Mixed }, // city será salvo dentro de address
     asaasId: { type: String, required: true },
     passwordHash: { type: String },
 }, { timestamps: true });

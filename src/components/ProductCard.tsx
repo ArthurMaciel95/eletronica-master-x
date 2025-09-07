@@ -140,7 +140,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.inStock ? "Entrar em contato" : "Produto Indisponível"}
         </button>
         {/* Add to Cart Button */}
-        {/* <button
+        <button
           onClick={() => {
             if (!product.inStock) return;
             // Recupera carrinho atual
@@ -176,7 +176,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             />
           </svg>
           {product.inStock ? "Adicionar ao carrinho" : "Indisponível"}
-        </button> */}
+        </button>
       </div>
     </div>
   );
