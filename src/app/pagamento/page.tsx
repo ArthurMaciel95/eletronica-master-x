@@ -78,7 +78,9 @@ export default function PagamentoPage() {
       const res = await fetch("/api/asaas/create-pix-key", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ /* dados necessários */ }),
+        body: JSON.stringify({
+          /* dados necessários */
+        }),
       });
       const result = await res.json();
       if (res.ok && result?.id) {

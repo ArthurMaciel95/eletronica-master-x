@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['mongoose']
+    serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
     domains: [
-      'images.unsplash.com',
-      'cdn.worldvectorlogo.com',
-      'upload.wikimedia.org'
-    ]
-  }
+      "images.unsplash.com",
+      "cdn.worldvectorlogo.com",
+      "upload.wikimedia.org",
+    ],
+  },
 };
 
 module.exports = nextConfig;

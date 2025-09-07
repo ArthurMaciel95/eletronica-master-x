@@ -4,13 +4,15 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import axios from "axios";
 import React, { useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  useMap,
-} from "react-leaflet";
+import { useRouter } from "next/navigation";
+import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
+import { TileLayer, Marker, Polyline, useMap } from "react-leaflet";
+
+const ClientMap = dynamic(
+  () => import("@/components/ClientMap"), // um componente separado só para o mapa
+  { ssr: false }
+);
 // Componente para ajustar o mapa ao bounds da rota
 function FitRouteBounds({ coords }: { coords: Array<[number, number]> }) {
   const map = useMap();
@@ -21,7 +23,6 @@ function FitRouteBounds({ coords }: { coords: Array<[number, number]> }) {
   }, [coords, map]);
   return null;
 }
-import "leaflet/dist/leaflet.css";
 
 function Etapas({ etapaAtual = 3 }) {
   const etapas = [
@@ -81,6 +82,12 @@ export default function FretePage() {
   const refLon = -48.670361;
   const raioKm = 50;
 
+  // Navegação client-side sem window
+  const router = useRouter();
+  function changeRoute(path: string) {
+    router.push(path);
+  }
+
   // Função Haversine para calcular distância em km
   function haversine(
     lat1: number,
@@ -106,10 +113,10 @@ export default function FretePage() {
       setLoading(true);
       setErro("");
       try {
-        const clienteStr =
-          typeof window !== "undefined"
-            ? localStorage.getItem("cliente")
-            : null;
+        if (typeof window === "undefined") return;
+
+        const clienteStr = localStorage.getItem("cliente");
+
         if (!clienteStr) {
           setErro("Cliente não encontrado. Faça login novamente.");
           setLoading(false);
@@ -206,37 +213,12 @@ export default function FretePage() {
             </div>
             {clienteCoords && (
               <div className="my-6">
-                <MapContainer
-                  // @ts-ignore
-                  center={[
-                    (clienteCoords.lat + refLat) / 2,
-                    (clienteCoords.lon + refLon) / 2,
-                  ]}
-                  zoom={9}
-                  style={{ height: "300px", width: "100%" }}
-                  scrollWheelZoom={false}
-                >
-                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  <Marker position={[refLat, refLon]} />
-                  <Marker position={[clienteCoords.lat, clienteCoords.lon]} />
-                  {routeCoords.length > 0 ? (
-                    <>
-                      <Polyline
-                        positions={routeCoords}
-                        pathOptions={{ color: "red" }}
-                      />
-                      <FitRouteBounds coords={routeCoords} />
-                    </>
-                  ) : (
-                    <Polyline
-                      positions={[
-                        [refLat, refLon],
-                        [clienteCoords.lat, clienteCoords.lon],
-                      ]}
-                      pathOptions={{ color: "blue" }}
-                    />
-                  )}
-                </MapContainer>
+                {clienteCoords && (
+                  <ClientMap
+                    clienteCoords={clienteCoords}
+                    routeCoords={routeCoords}
+                  />
+                )}
                 <div className="flex justify-between text-xs mt-2">
                   <span>
                     <span className="font-bold">Destino:</span> Vitória/ES
@@ -266,7 +248,7 @@ export default function FretePage() {
               ? "bg-blue-700 hover:bg-blue-800 text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
-          onClick={() => elegivel && (window.location.href = "/confirmacao")}
+          onClick={() => elegivel && changeRoute("/confirmacao")}
           disabled={!elegivel}
         >
           Avançar para Confirmação

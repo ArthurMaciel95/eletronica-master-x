@@ -114,7 +114,7 @@ export default function ConfirmacaoPage() {
         )}
         <button
           className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg mt-4 transition-colors duration-200"
-          onClick={() => (window.location.href = "/pagamento")}
+          onClick={() => window && (window.location.href = "/pagamento")}
         >
           Avançar para Pagamento
         </button>
